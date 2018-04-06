@@ -502,13 +502,10 @@ public class RestInvocationHandlerTest {
 
         List<Future<Boolean>> futures = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            Future<Boolean> test = threadPool.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() {
-                    log.trace("Submitting call");
-                    proxy.getNonce(vf);
-                    return true;
-                }
+            Future<Boolean> test = threadPool.submit(() -> {
+                System.err.println("Submitting call");
+                proxy.getNonce(vf);
+                return true;
             });
             futures.add(test);
         }
@@ -543,7 +540,9 @@ public class RestInvocationHandlerTest {
             synchronized (this) {
                 RestInvocation invocation = createInvocation(method, args);
                 nonce = (Long) invocation.getParamValue(FormParam.class, "nonce");
-                log.trace("Got nonce {}, maxNonce = {}", nonce, maxNonce);
+                System.err.println("Got nonce " + nonce+
+                        ", maxNonce = " + maxNonce+
+                        "");
                 if (nonce <= maxNonce) {
                     throw new IllegalArgumentException("" + nonce);
                 }

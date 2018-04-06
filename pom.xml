@@ -27,9 +27,8 @@
 
     <groupId>com.github.mmazi</groupId>
     <artifactId>rescu</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
+    <version>2.0.3-SNAPSHOT-STDERR</version>
     <packaging>jar</packaging>
-
     <name>ResCU</name>
     <description>A lightweight REST client utility</description>
     <url>https://github.com/mmazi/rescu</url>

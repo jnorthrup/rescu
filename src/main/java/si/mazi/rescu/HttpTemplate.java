@@ -89,9 +89,11 @@ class HttpTemplate {
     }
 
     HttpURLConnection send(String urlString, String requestBody, Map<String, String> httpHeaders, HttpMethod method) throws IOException {
-        log.debug("Executing {} request at {}", method, urlString);
-        log.trace("Request body = {}", requestBody);
-        log.trace("Request headers = {}", httpHeaders);
+        log.debug("Executing " + method+
+                " request at " +urlString+
+                ""  );
+        System.err.println("Request body =  "+ requestBody);
+        System.err.println("Request headers = "+ httpHeaders);
 
         preconditionNotNull(urlString, "urlString cannot be null");
         preconditionNotNull(httpHeaders, "httpHeaders should not be null");
@@ -124,7 +126,9 @@ class HttpTemplate {
         if (log.isTraceEnabled()) {
             for (Map.Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
                 if (entry.getKey() != null) {
-                    log.trace("Header response property: key='{}', value='{}'", entry.getKey(), entry.getValue());
+                    System.err.println("Header response property: key='" +
+                            entry.getKey()+"', value='" +
+                            entry.getValue()+"'" );
                 }
             }
         }
@@ -135,7 +139,9 @@ class HttpTemplate {
         if (responseString != null && responseString.startsWith("\uFEFF")) {
             responseString = responseString.substring(1);
         }
-        log.trace("Http call returned {}; response body:\n{}", httpStatus, responseString);
+        System.err.println("Http call returned " +httpStatus+
+                "; response body:\n" +
+                responseString+"" );
 
         return new InvocationResult(responseString, httpStatus);
     }
@@ -163,10 +169,15 @@ class HttpTemplate {
 
         headerKeyValues.putAll(httpHeaders);
 
-        for (Map.Entry<String, String> entry : headerKeyValues.entrySet()) {
-            connection.setRequestProperty(entry.getKey(), entry.getValue());
-            log.trace("Header request property: key='{}', value='{}'", entry.getKey(), entry.getValue());
-        }
+        headerKeyValues.forEach((key, value) -> {
+            connection.setRequestProperty(key, value);
+            System.err.println("Header request property: key='" +
+                    key +
+                    "', value='" +
+                    value +
+                    "'"
+            );
+        });
 
         // Perform additional configuration for POST
         if (contentLength > 0) {
